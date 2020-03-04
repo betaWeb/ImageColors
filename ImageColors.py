@@ -6,7 +6,11 @@ class ImageColors:
 	file = None
 	colors = {}
 
-	def __init__(self, file_path):
+	def __init__(self, file_path) -> None:
+		"""
+		:param str file_path the image file path
+		"""
+		
 		self.file_path = file_path
 
 		self.__loadFile()
@@ -14,31 +18,29 @@ class ImageColors:
 		self.__setImageColorsOccurrences()
 
 
-	def getColorsList(self):
+	def getColorsList(self) -> list:
 		return [c[0] for c in self.colors]
 
 	
-	def getMainColor(self):
-		return self.colors[0]
+	def getMainColor(self) -> str:
+		return self.colors[0][0]
 
 
-	def count(self):
+	def count(self) -> int:
 		return len(self.colors)
 
 	
-	def __loadFile(self):
+	def __loadFile(self) -> None:
 		if (path.exists(self.file_path) == False):
-			raise FileExistsError("File '%s' does not exists" % (self.file_path))
-
-		print("Loading file '%s'..." % (path.basename(self.file_path)))
+			raise FileExistsError(f"File '{self.file_path}' does not exists")
 		
 		try:
 			self.file = Image.open(self.file_path)
 		except Exception:
-			raise Exception("Cannot load file '%s'" % (self.file_path))
+			raise Exception(f"Cannot load file '{self.file_path}'")
 
 
-	def __setImageColorsOccurrences(self):
+	def __setImageColorsOccurrences(self) -> None:
 		for x in range(self.file.size[0]):
 			for y in range(self.file.size[1]):
 				key = self.__getKey(x, y)
@@ -49,10 +51,10 @@ class ImageColors:
 
 		self.colors = sorted(self.colors.items(), key=lambda kv: kv[1], reverse=True)
 
-		
-	def __loadPix(self):
+
+	def __loadPix(self) -> None:
 		self.__pix = self.file.load()
 
 
-	def __getKey(self, x, y):
+	def __getKey(self, x, y) -> str:
 		return ','.join(map(str, self.__pix[x,y]))
